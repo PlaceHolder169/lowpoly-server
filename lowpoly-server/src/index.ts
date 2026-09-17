@@ -1,6 +1,6 @@
 import { Server } from '@colyseus/core';
 import { WebSocketTransport } from '@colyseus/ws-transport';
-import { GameRoom } from './rooms/GameRoom';
+import { GameRoom } from './rooms/GameRoom.js';
 
 // Railway 会注入 PORT 环境变量，本地开发用 2567
 const port = Number(process.env.PORT) || 2567;

@@ -1,23 +1,30 @@
 {
   "name": "lowpoly-server",
+  "type": "module",
   "version": "1.0.0",
   "description": "",
   "main": "src/index.ts",
   "scripts": {
-    "start": "tsx src/index.ts"
+    "start": "tsc && node dist/index.js",
+    "dev": "tsx src/index.ts"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "commonjs",
   "dependencies": {
     "@colyseus/core": "^0.15.0",
     "@colyseus/schema": "^2.0.0",
     "@colyseus/ws-transport": "^0.15.0",
     "@types/express": "^4.17.21",
-    "@types/node": "^20.0.0",
+    "esbuild": "^0.28.2",
     "express": "^4.18.2",
-    "tsx": "^4.0.0",
-    "typescript": "^5.0.0"
+    "tsx": "^4.0.0"
+  },
+  "allowScripts": {
+    "esbuild@0.28.2": true
+  },
+  "devDependencies": {
+    "@types/node": "^22.20.3",
+    "typescript": "^7.0.2"
   }
 }
