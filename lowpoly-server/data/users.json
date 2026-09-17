@@ -1,0 +1,49 @@
+{
+  "users": {
+    "test": {
+      "username": "test",
+      "passwordHash": "8be45b73ccb65cb0e17377f7c9a959b074cf7d0dd01e579b8ba392e7db12deb2",
+      "createdAt": 1789655438699,
+      "matches": [],
+      "loadout": {
+        "primary": "AK-47",
+        "melee": "蝴蝶刀",
+        "special": null,
+        "character": "male_rifleman"
+      }
+    },
+    "kk": {
+      "username": "kk",
+      "passwordHash": "23121edf54d7570f5d21c89b5956b7764701e9aaadde81339b0a444c0b37b8a5",
+      "createdAt": 1789655699702,
+      "matches": [
+        {
+          "time": 1789658810296,
+          "result": "lose",
+          "redScore": 2,
+          "blueScore": 0,
+          "map": "dust",
+          "score": 0,
+          "kills": 0,
+          "deaths": 2,
+          "assists": 0,
+          "isMVP": false,
+          "isSVP": true,
+          "primaryWeapon": "AWP",
+          "character": "male_heavy"
+        }
+      ],
+      "loadout": {
+        "primary": "AWP",
+        "melee": "蝴蝶刀",
+        "special": null,
+        "character": "male_heavy"
+      }
+    }
+  },
+  "tokens": {
+    "22e6a585-d7e9-4309-979a-e0a7c7f83143": "test",
+    "4b915fe8-ef48-4e4f-80bf-11fc1c2ef2db": "test",
+    "24f4db5a-2460-46ec-b12a-4a10f49036b8": "kk"
+  }
+}
