@@ -6,16 +6,13 @@ import { GameRoom } from './rooms/GameRoom.js';
 import { apiRouter } from './api.js';
 import { loadDB } from './userStore.js';
 
-// ★ Railway 会注入 PORT 环境变量，本地默认 2567
 const port = Number(process.env.PORT) || 2567;
 
-// 启动时加载用户数据
 loadDB();
 
 const app = express();
 const httpServer = createServer(app);
 
-// CORS
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
@@ -24,10 +21,8 @@ app.use((req, res, next) => {
   next();
 });
 
-// 账号 API
 app.use('/api', apiRouter);
 
-// 房间列表
 app.get('/rooms', async (_req, res) => {
   try {
     const rooms: any[] = await matchMaker.query({ name: 'game_room' });
@@ -47,7 +42,6 @@ app.get('/rooms', async (_req, res) => {
   }
 });
 
-// 健康检查（Railway 用它判断服务是否活着）
 app.get('/health', (_req, res) => {
   res.json({ ok: true, uptime: process.uptime() });
 });
@@ -62,7 +56,6 @@ const gameServer = new Server({
 
 gameServer.define('game_room', GameRoom);
 
-// ★ 绑定 0.0.0.0，否则 Railway 外部访问不到
 gameServer.listen(port, '0.0.0.0').then(() => {
   console.log(`✅ 联机服务器已启动，监听端口: ${port}`);
 });

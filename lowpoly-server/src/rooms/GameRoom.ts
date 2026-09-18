@@ -20,7 +20,6 @@ export class PlayerState extends Schema {
   @type('string') characterVariant = 'male_rifleman';
   @type('int16') killStreak = 0;
 
-  /** ★ 复活无敌剩余秒数 */
   @type('float32') invulnT = 0;
 
   @type('int16') kills = 0;
@@ -65,7 +64,7 @@ const VALID_MELEE = ['匕首', '蝴蝶刀', '尼泊尔', '爪刀', '武士刀', 
 const VALID_SPECIAL = ['复合弓', '加特林', '火箭筒', '榴弹发射器', ''];
 const VALID_MAPS = ['dust', 'transport'];
 const VALID_ROUND_TIMES = [180, 300, 600];
-const VALID_CHARS = ['male_rifleman', 'male_heavy', 'female_scout', 'female_sniper'];
+const VALID_CHARS = ['male_rifleman', 'male_heavy', 'male_scout', 'male_sniper', 'female_assault', 'female_scout', 'female_sniper', 'female_heavy'];
 const VALID_MAX_CLIENTS = [2, 4, 6];
 
 const MELEE_DAMAGE: Record<string, number> = {
@@ -177,7 +176,6 @@ export class GameRoom extends Room<GameState> {
 
     console.error(`🎮 新房间已创建: "${roomName}" (maxClients=${this.maxClients}, map=${this.state.mapName})`);
 
-    // ★ 无敌倒计时：每 100ms 递减
     this.invulnTimer = setInterval(() => {
       if (this.state.phase !== 'playing') return;
       this.state.players.forEach((p) => {
@@ -377,7 +375,6 @@ export class GameRoom extends Room<GameState> {
       if (target.team === shooter.team) return;
       if (target.health <= 0) return;
 
-      // ★ 目标无敌 → 忽略伤害
       if (target.invulnT > 0) return;
 
       const dx = target.x - shooter.x;
@@ -413,6 +410,16 @@ export class GameRoom extends Room<GameState> {
         this.damageHistory.set(hitTarget, history);
       }
       history.set(client.sessionId, Date.now());
+
+      // ★ 通知被打的人：谁打的、从哪打、掉多少血
+      const targetClient = this.clients.find(c => c.sessionId === hitTarget);
+      targetClient?.send('hurt', {
+        from: client.sessionId,
+        x: shooter.x,
+        z: shooter.z,
+        damage: dmg,
+        isHead,
+      });
 
       console.error(`💥 ${shooter.name} (${weaponName}) → ${target.name} -${dmg} (剩余 ${target.health})`);
 
@@ -461,7 +468,7 @@ export class GameRoom extends Room<GameState> {
           const p = this.state.players.get(victimId);
           if (p) {
             p.health = 100;
-            p.invulnT = RESPAWN_INVULN_SEC;   // ★ 复活无敌
+            p.invulnT = RESPAWN_INVULN_SEC;
             const s = randomSpawn(p.team, this.state.mapName);
             p.x = s.x; p.y = s.y; p.z = s.z;
             p.weapon = p.primaryWeapon;

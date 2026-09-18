@@ -1,6 +1,8 @@
 import express from 'express';
 import {
   register, login, getUserByToken, saveMatch, saveLoadout, Loadout,
+  searchUsers, sendFriendRequest, acceptFriend, rejectFriend, removeFriend,
+  getMyFriends, getPublicProfile,
 } from './userStore.js';
 
 export const apiRouter = express.Router();
@@ -47,4 +49,47 @@ apiRouter.post('/loadout', (req, res) => {
   };
   const ok = saveLoadout(token, loadout);
   res.json({ ok });
+});
+
+// ==================== ★ 好友 API ====================
+
+apiRouter.get('/friends', (req, res) => {
+  const token = String(req.headers['x-token'] ?? '');
+  res.json(getMyFriends(token));
+});
+
+apiRouter.get('/search', (req, res) => {
+  const token = String(req.headers['x-token'] ?? '');
+  const q = String(req.query.q ?? '');
+  res.json(searchUsers(token, q));
+});
+
+apiRouter.post('/friend-request', (req, res) => {
+  const token = String(req.headers['x-token'] ?? '');
+  const target = String(req.body?.target ?? '');
+  res.json(sendFriendRequest(token, target));
+});
+
+apiRouter.post('/friend-accept', (req, res) => {
+  const token = String(req.headers['x-token'] ?? '');
+  const from = String(req.body?.from ?? '');
+  res.json(acceptFriend(token, from));
+});
+
+apiRouter.post('/friend-reject', (req, res) => {
+  const token = String(req.headers['x-token'] ?? '');
+  const from = String(req.body?.from ?? '');
+  res.json(rejectFriend(token, from));
+});
+
+apiRouter.post('/friend-remove', (req, res) => {
+  const token = String(req.headers['x-token'] ?? '');
+  const target = String(req.body?.target ?? '');
+  res.json(removeFriend(token, target));
+});
+
+apiRouter.get('/user/:username', (req, res) => {
+  const token = String(req.headers['x-token'] ?? '');
+  const username = String(req.params.username ?? '');
+  res.json(getPublicProfile(token, username));
 });
